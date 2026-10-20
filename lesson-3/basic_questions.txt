@@ -1,0 +1,35 @@
+1. LM va LLM o’rtasida qanday farq bor?
+
+2. LLM va SLM (Small Language Model) o’rtasida qanday farq bor?
+
+3. Bitter Lesson (Rich Sutton, 2019) nima?
+
+4. Claude, ChatGPT va Gemini — bularni qanday model deb ataymiz?
+
+5. Claude, ChatGPT va Gemini oilalariga kiruvchi asosiy modellarni
+sanab bering.
+
+6. BPE (Byte Pair Encoding) nima?
+
+7. Tokenization nima va u nima uchun kerak?
+
+8. Trainingni boshlashdan oldin nimalarni hisobga olishimiz kerak?
+
+9. Model parametrlari soni qanday hisoblanadi?
+10. Model uchun kerakli xotira (memory) qanday hisoblanadi?
+11. Trade-oﬀ nima degani?
+12. Frontier model nima?
+13. Emergent ability (paydo bo’luvchi qobiliyat) nima?
+14. Scaling Law nima?
+15. Chinchilla qoidasi nimani anglatadi?
+16. Alignment nima?
+17. SFT (Supervised Fine-Tuning) nima?
+18. RLHF nima?
+19. Transformer arxitekturasi nima uchun muhim hisoblanadi?
+20. FLOP nima?
+21. MFU (Model FLOPs Utilization) nima?
+22. BF16, FP16 va FP32 formatlari o’rtasidagi asosiy farq nimada?
+23. AdamW optimizer nima uchun LLM trainingda standart
+hisoblanadi?
+24. Xavier initialization nima uchun kerak?
+25. Activation checkpointing nima?
