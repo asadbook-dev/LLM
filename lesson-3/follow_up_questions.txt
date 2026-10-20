@@ -1,0 +1,199 @@
+1.  Nega hozir ko’p odamlar yangi model qurish o’rniga eski (tayyor)
+modellardan foydalanishyapti?
+=> Noldan o’qitish millionlab dollar, minglab GPU va ulkan ma’lumot talab qiladi.
+
+2. Scaling Laws va Chinchilla qoidasi bir-biridan qanday farq qiladi?
+=> Scaling Laws — umumiy qonuniyat: Model, ma’lumot va hisoblash kattalashgan sari xato (loss) bashorat qilinadigan tarzda kamayadi:
+=> Chinchilla — shu qonuniyatdan chiqqan aniq xulosa: byudjetni optimal bo’lish uchun D=20N
+
+3. Nega data sifati va miqdori LLMlarda boshqa AI modellariga
+qaraganda muhimroq hisoblanadi?
+=> LLM hamma narsani ma’lumotdan o’rganadi, qo’lda kiritilgan qoidalar yo’q
+=> Ma’lumot triliyonlab token bo’lgani uchun tekshirish qiyin, xatolar modelga o’tadi
+=> Takroriy ma’lumot modelni yodlashga (memorization) olib boradi.
+
+4. Token va so’zlar doimo bir xilmi? Barcha holatlarni (character ,
+word, BPE) misollar bilan tushuntiring.
+=> 3 xil holati bor. 1: tokens==words, 2: tokens>words, 3: tokens<words
+=> "olma oldim" - character: ["o", "l", "m", ..., "o", "l", "d", "i", "m"]
+word: ["olma", "oldim"], BPE: ["ol", "ma", "ol", "dim"]
+
+5. Parametrlar sonini bilganimizdan keyin qolgan to’rtta hisob-kitob
+ — compute, vaqt, narx, samaradorlik — bir-biriga qanday bog’lanadi?
+
+Memory: 16B * N
+COmpute budget: 6 * N * D
+Time: COmpute / (GPU * peak * MFU)
+Cost: GPU soni * Time * GPU narx/soat
+
+Hammasi br biriga bog'liq: Memoryni hisoblash orqali nechta GPu kerakligini bilishimiz mumkin. va GPU ni bilganimizdan song Vaqt va narxga ham bog'liq boladi albatta.
+GPU soni ko'paysa vaqt kamayadi lekin narx oshadi
+MFU oshsa Vaqt ham narx ham kamayasi
+
+6. Kichik va katta modellar xatti-harakati nima uchun farq qiladi?
+Attention va MLP FLOPs taqsimoti misolida tushuntiring.
+
+Attention — tokenlar bir-biri bilan qanday bog‘liqligini hisoblaydi. Attention xarajati tokenlar sonining kvadratiga bog‘liq
+MLP (Multi-Layer Perceptron) — har bir tokenning representation'ini neyron qatlamlari orqali qayta ishlaydi.
+Model katta bo‘lsa — unda ko‘proq parameters bor, ko‘proq murakkab naqshlarni o‘rganishi mumkin.
+Matn uzun bo‘lsa — Attention ko‘proq token juftliklarini hisoblaydi.
+Modelning kattaligi uning o‘rganish imkoniyatiga, matnning uzunligi esa hisoblash xarajatiga ta’sir qiladi. Katta model har doim ham yaxshiroq emas; natija training data va training sifatiga ham bog‘liq
+
+
+7. “Har bir FLOP uchun maksimal intellekt” mantig’i nima uchun
+CS336 mindsetining markazida turadi?
+CS336 (Stanford’ning “Language Modeling from Scratch” kursi) mantig’i shu: hisoblash kuchi — eng qimmat va cheklangan resurs. Bitter Lesson ko’ra ko’proq hisoblash g’alaba qozonadi, 
+shuning uchun har bir qaror (arxitektura, precision, data) “bir FLOP’dan qancha loss kamayadi” deb baholanadi.
+
+8. OpenAI’ning haqiqiy innovatsiyasi nima edi — yangi texnik
+yechimmi yoki falsafiy/strategik qarormi? Dalillar bilan
+tushuntiring.
+=> Transformer Google’da (2017) paydo bo’lgan, OpenAI yaratmagan.
+=> OpenAI scaling’ga ishondi: GPT-2 → GPT-3 asosan bir xil arxitekturani juda kattalashtirish edi.
+=> Scaling laws (Kaplan, 2020) bu tikishni asosladi.
+=> RLHF (InstructGPT) va ChatGPT modelni odamga foydali qildi.
+Demak, g’oyalar ko’pincha mavjud edi, OpenAI ularni katta masshtabda birlashtirdi va ommaga yetkazdi.
+
+9. Nega GPT -3 Chinchilla nuqtai nazaridan “under-trained”
+(yetarlicha o’qitilmagan) hisoblanadi?
+=> GPT-3: 175 milliard parametr, taxminan 300 milliard token bilan o’qitilgan, ya’ni parametrga ~1.7 token.
+=> Chinchilla bo’yicha kerak: 20 * 175 = 3.5 trillion token.
+
+
+10. BPE nima uchun character-level yoki word-level tokenizationdan
+afzalroq?
+=> Word: lug’at juda katta, yangi so’zni bilmaydi (OOV - Out of vocab)
+=> Character: OOV yo’q, lekin ketma-ketlik juda uzun, attention hisobi qimmat
+=> BPE: lug’at o’rtacha, OOV yo’q, ketma-ketlik qisqa, tez-tez uchraydigan bo’laklar bitta token bo’ladi.
+
+11. Nega FP16 xavfli, lekin BF16 xavfsiz hisoblanadi? Kichik gradient
+qiymati (masalan 1e-8) misolida tushuntiring.
+Format	Exponent	Mantissa	Eng kichik oddiy son
+FP16	5 bit	      10 bit	   6 10^-5
+BF16	8 bit	      7 bit	     10^-38
+
+FP16'da juda kichik, 0 ga aylanadi (underflow), shu parametr o’qitilmay qoladi. Katta son tomonda ham xavf bor: 65 504 dan oshsa overflow bo’ladi. Shuning uchun FP16'da loss scaling kerak.
+BF16'da diapazon FP32 bilan bir xil, 10^-8 saqlanadi. Aniqlik pastroq, lekin barqarorlik muhimroq.
+
+12. 6ND (yoki 6NT) formulasi qayerdan kelib chiqadi? Forward va
+backward pass FLOPslarini alohida ko’rsatib izohlang.
+=> Forward: 1 ko’paytirish + 1 qo’shish = 2 FLOPs → 2N
+=> Backward: ikkita matritsa ko’paytmasi: activation gradienti: 2N, weight gradienti: 2N, jami 4N
+2N + 4N = 6N
+
+13. MFU nima uchun hech qachon 100% ga yeta olmaydi?
+=> Xotira tezligi: ba’zi amallar hisoblashga emas, ma’lumot o’qishga bog’liq (memory-bound).
+=> GPU’lar orasidagi aloqa (communication) vaqti
+=> Matmul bo’lmagan amallar: softmax, LayerNorm, activation.
+
+14. AdamW bilan trainingda nega har bir parametrga 16 bayt xotira
+kerak bo’ladi? Har bir komponentni (weight, gradient, m, v)
+alohida tushuntiring.
+FP32
+Weight (parametr)	4
+Gradient	4
+m (gradient o’rtachasi, 1-moment)	4
+v (gradient kvadrati o’rtachasi, 2-moment)	4
+Jami	16
+
+15. Xotira GPUga sig’masa (OOM xatosi), qanday yechimlar mavjud?
+Batch size’ni kamaytirish + gradient accumulation, Activation checkpointing, Mixed precision (BF16), 
+
+
+16. MFUni oshirish yoki precisionni to’g’ri tanlash orqali trening
+narxini qanday kamaytirish mumkin? Raqamli misol bilan
+tushuntiring.
+parameters-7B
+tokens - 20N => 140B
+Compute budget - 6ND => 6 * 7B * 140B => 6 e21 FLOPs
+GPU peak => e15 FLOPS, GPU narx/soat - 2
+Time - 6e21/ (e15 * MFU * 3600)
+
+MFU - 20% => Time - 8333 soat, Cost - $16700
+MFU - 40% => Time - 4167 soat, Cost - $8300
+
+17. Emergence hodisasi tufayli kichik modeldagi natijalarni katta
+modelga chiziqli ekstrapolyatsiya qilib bo’lmasligi amaliyotda
+nimani anglatadi?
+=> Loss odatda silliq kamayadi va scaling law bilan bashorat qilinadi.
+=> Lekin aniq qobiliyat (masalan, mantiq yoki kod) bir nuqtadan keyin birdan paydo bo’lishi mumkin (ayniqsa exact-match kabi “keskin” metrikalarda).
+Amaliyotda: kichik tajribalar loss’ni yaxshi bashorat qiladi, lekin muhim qobiliyatni maqsadli masshtabda alohida tekshirish kerak.
+
+18. RLHF jarayonida reward model qanday rol o’ynaydi va u qanday
+o’qitiladi?
+=> Roli: inson bahosining o’rnini bosadi. (prompt, javob) ni olib, bitta son (reward) beradi.
+=> O’qitilishi: odamlar ikki javobdan yaxshisini tanlaydi (yaxshi, yomon). 
+
+19. SFT nimani o’rgatadi va nimani o’rgata olmaydi?
+=> Ko’rsatmaga amal qilish va javob formati (savol keldi, javob beraman), Model allaqachon bilgan narsani to’g’ri chiqarish ni o'rgatadi
+=> Yangi bilimni ishonchli kirita olmaydi. Pretraining’da bo’lmagan faktni o’rgatsa, model ko’pincha uydirma (hallucination) qilishga o’rganadi,
+Qaysi javob yaxshiroq ekanini ajratishni. SFT faqat bitta “to’g’ri” javobga taqlid qiladi, yomon javob nega yomon ekanini bilmaydi. Buni RLHF yoki preference o’qitish qiladi.
+
+20. Pretraining va foydali assistant bo’lish orasidagi “gap” (tafovut)
+nimada, va bu tafovut qanday yopiladi?
+=> Pretrained model faqat matnni davom ettiradi. “Parij qayerda?” desangiz, u javob o’rniga yana savol yozishi mumkin, chunki internetda savollar ketma-ket keladi.
+=> Assistant esa savolga javob beradi, ko’rsatmaga amal qiladi, zararli so’rovni rad etadi.
+=> SFT — ko’rsatmaga amal qilishni o’rgatadi, RLHF / preference o’qitish — javoblarni inson xohlagan sifatga yaqinlashtiradi.
+
+21. Common Crawl’dagi xom internet ma’lumotlarining asosiy
+muammolari nima, va ular qanday operatsiyalar (filtering, dedup
+va h.k.) bilan hal qilinadi?
+
+Muammo.                            	                Yechim
+HTML, menyu, reklama (boilerplate)	                Matnni toza ajratib olish (extraction)
+Kerakmas til                          	            Language ID bilan filtrlash
+Past sifatli, spam, tushunarsiz matn	              Heuristic qoidalar + sifat klassifikatori
+Ko’p takroriy matn	                                Deduplication (aynan bir xil + o’xshash, masalan MinHash)
+Zararli kontent, shaxsiy ma’lumot (PII)	            Maxsus filtrlar
+Benchmark savollari treningga kirib ketishi	        Decontamination
+
+22. Nega ba’zan modelni kattalashtirishdan ko’ra data sifatini 2x
+oshirish ko’proq foyda beradi?
+=> Hisoblash har bir token uchun sarflanadi. Toza bolmagan tokenga sarflangan FLOP behuda ketadi.
+=> Sifatli ma’lumotda har bir token ko’proq o’rgatadi, shuning uchun bir xil FLOP’dan loss ko’proq kamayadi.
+=> Modelni 2 baravar katta qilish narxni taxminan 2 baravar (yoki undan ko’p) oshiradi, filtrlash esa asosan bir martalik xarajat.
+=> 
+
+23. CPU va GPU o’rtasida tensor ko’chirishda nimalarga e’tibor berish
+kerak, va bu xato qanday oqibatlarga (masalan, crash yoki
+sekinlashuv) olib kelishi mumkin?
+=> Tezlik: CPU ↔ GPU aloqasi (PCIe) GPU xotirasidan juda sekin. Ko’p ko’chirish sekinlashuvga olib keladi.
+=> Sinxronizatsiya: GPU’dan qiymatni CPU’ga qaytarish (masalan, loss’ni son sifatida o’qish) GPU’ni to’xtatib turadi.
+=> Qurilma nomuvofiqligi: bir amalda ikki tensor har xil qurilmada bo’lsa, dastur xato bilan to’xtaydi (crash).
+=> Xotira: keraksiz tensorlarni GPU’da ushlab turish OOM (Out of memory) beradi.
+=> 
+ 
+24. Checkpoint saqlashda nega faqat model emas, balki optimizer
+state ham saqlanishi shart?
+AdamW’ning m va v qiymatlari butun o’qitish tarixini ichiga yig’gan. Agar faqat weight’lar saqlansa, davom ettirganda m va v nolga qaytadi
+
+25. Kichik model (masalan, 1.21B parametr) uchun hisoblangan vaqt
+va narxni yirik model (masalan, 70B parametr)ga qanday
+masshtablash mumkin — qaysi formulalar o’zgarmay qoladi?
+
+Tokens 20N, C=6ND, Time, Cost o'zgarmaydi.
+O’zgaradigan narsalar: N, D va ko’pincha MFU (katta modelda GPU’lar aloqasi tufayli pasayadi), GPU soni.
+
+Chinchilla bo’yicha: 
+1.21B: D=24.2B, C=1.8e20
+70B: D=1.4T, C=5.9e23
+
+Parameters nisbati => 58 martta katta model. lekin compute budget - 3350 martta kop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
