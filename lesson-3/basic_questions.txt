@@ -1,35 +1,94 @@
 1. LM va LLM o’rtasida qanday farq bor?
+=> LM (Language Model) next token prediction qiladigan har qanday model. 
+=> LLM (Large LM) — shuning o’zi, lekin milliardlab parametr va juda ham ko'p data bilan o’qitilgan model.
 
 2. LLM va SLM (Small Language Model) o’rtasida qanday farq bor?
+=> SLM (Small Language Model) — kichik model (oz parametr va data bilan oqitilingan model). U arzon, tez, telefon yoki noutbukda ishlaydi. 
+=> LLM kuchliroq, lekin qimmat va og’ir. Odatda SLM tor vazifada yaxshi, LLM umumiy vazifada. 
+=> Masalan: SML ni biror bir bompniya uchun alohida model qilib ishlatsak boladi ya'ni kompaniyaning ozining malumotlari asosida ishlaydi. LLM ga esa GPT 5, Haiku 5.5 vahokazolarni olishimiz mumkin.
 
 3. Bitter Lesson (Rich Sutton, 2019) nima?
+=> Xulosasi shu: uzoq muddatda inson bilimini qo’lda kiritadigan usullar emas, umumiy usullar + ko’p hisoblash kuchi (search va learning) ustun keladi. 
+Ya’ni model va ma’lumotni kattalashtirish ko’pincha aqlli qo’lda yozilgan qoidalardan yaxshiroq ishlaydi.
 
 4. Claude, ChatGPT va Gemini — bularni qanday model deb ataymiz?
+=> Ular LLM (ya’ni keng vazifalarga moslashadigan asosiy model) oilalari. Ko’pchiligi multimodal (matn, rasm, ba’zan audio va video bilan ishlaydi). 
+=> “ChatGPT” aslida ilova nomi, ichidagi model GPT.
 
 5. Claude, ChatGPT va Gemini oilalariga kiruvchi asosiy modellarni
 sanab bering.
+=> Claude -	Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5
+=> OpenAI (ChatGPT) -	GPT-6 Astra, Sol, Luna
+=> Gemini -	Gemini 3.8 Flash, Gemini 4 Argon
 
 6. BPE (Byte Pair Encoding) nima?
+=> Tokenizer algoritmi. Eng ko’p yonma-yon keladigan bayt/harf juftini birlashtirib, yangi token yasaydi va lug’atni shunday quradi. Tez-tez uchraydigan so’zlar 1 token, noyob so’zlar bo’laklarga bo’linadi.
 
 7. Tokenization nima va u nima uchun kerak?
+=> Matnni tokenlarga bo’lib, har birini raqamga aylantirish. Model faqat sonlar bilan ishlaydi, shuning uchun matnni raqamga o’girish shart.
 
 8. Trainingni boshlashdan oldin nimalarni hisobga olishimiz kerak?
+Parametrs, Xotira, Compute, Vaqt, Narx, Samaradorlik
 
 9. Model parametrlari soni qanday hisoblanadi?
+12*L*(d**2)
+L - transformer layerlar soni
+d - hidden dimension
+12 - attention + FFN matritsalar hisobi
+
 10. Model uchun kerakli xotira (memory) qanday hisoblanadi?
+16B * N
+weights(FP32) - 4B, gradients(FP32) - 4B, OPtimizer, Activations - 4 => 16
+N - Parameters
+
 11. Trade-oﬀ nima degani?
+=> Bir narsani olish uchun boshqasidan voz kechish. Misol: katta model aniqroq, lekin vaqt ko'p ketadi va qimmat bo'ladi.
+
 12. Frontier model nima?
+=> Hozirgi imkoniyat chegarasidagi eng kuchli modellar (masalan GPT-6 Astra, Claude Fable/Mythos tier). Ular eng ko’p hisoblash bilan o’qitiladi.
+
 13. Emergent ability (paydo bo’luvchi qobiliyat) nima?
+=> Kichik modelda yo’q, ma’lum vaqtdan keyin birdan paydo bo’ladigan qobiliyat
+
 14. Scaling Law nima?
+=> Model, ma’lumot va hisoblash kattalashgan sari xato (loss) bashorat qilinadigan tarzda kamayadi:
+=> Oddiy tilda: resurs ko’paysa, sifat silliq oshadi va buni oldindan hisoblash mumkin.
+
 15. Chinchilla qoidasi nimani anglatadi?
+=> Berilgan hisoblash byudjeti uchun eng yaxshi nisbat: D=20N$ (har parametrga ~20 token). Ilgari modellar katta, lekin ma’lumot kam edi. Hozir ko’pincha undan ko’proq token ishlatiladi, 
+chunki kichikroq model keyin arzonroq ishlaydi.
+
 16. Alignment nima?
+=> Modelni inson maqsadi va qadriyatlariga moslash: foydali, halol va zararsiz qilish.
+
 17. SFT (Supervised Fine-Tuning) nima?
+=> Tayyor (savol, to’g’ri javob) juftliklarda o’qitish. Oddiy pretrained modeldan ko’rsatmaga amal qiladigan model yasaydi.
+
 18. RLHF nima?
+=> Reinforcement Learning from Human Feedback - Odamlar javoblarni baholaydi, Shundan reward model o’qitiladi, LLM reward’ni oshirishga o’rgatiladi (RL orqali)
+
 19. Transformer arxitekturasi nima uchun muhim hisoblanadi?
+=> Tokenlarni parallel qayta ishlaydi, Attention uzoq so’zlar orasidagi bog’lanishni to’g’ridan-to’g’ri topadi, Yaxshi scale bo’ladi, shuning uchun zamonaviy LLM’larning asosi.
+
 20. FLOP nima?
+=> Kasr sonlar ustida bajariladigan bitta matematik amal. FLOPs — jami ish hajmi, FLOPS — qurilmaning soniyadagi tezligi.
+
 21. MFU (Model FLOPs Utilization) nima?
+=> GPU o’z kuchining necha foizini haqiqiy ishga sarflayotganini ko’rsatadi.
+
 22. BF16, FP16 va FP32 formatlari o’rtasidagi asosiy farq nimada?
-23. AdamW optimizer nima uchun LLM trainingda standart
-hisoblanadi?
+=> FP32	- 32 bit - Eng aniq, lekin sekin va xotira ko’p oladi
+=> FP16	- 16 bit - Aniq, lekin son diapazoni kichik
+=> BF16 -	16 bit - FP32 bilan bir xil diapazon, aniqligi pastroq, barqaror
+
+23. AdamW optimizer nima uchun LLM trainingda standart hisoblanadi?
+=> Adam har bir parametr uchun alohida o’rganish tezligini moslaydi (gradient o’rtachasi va dispersiyasi asosida)
+=> W (weight decay) ni gradientdan ajratib qo’llaydi, bu yaxshi generalization beradi.
+
 24. Xavier initialization nima uchun kerak?
+=> Boshlang’ich weight’larni shunday tanlaydiki, signal va gradient qatlamlar bo’ylab yo’qolib ketmasin yoki portlamasin:
+=> Oddiy tilda: o’qitish boshida hamma qatlamda “ovoz balandligi” bir xil bo’ladi. ReLU uchun He initialization ishlatiladi.
+
 25. Activation checkpointing nima?
+=> Backward uchun forward’dagi hamma oraliq natijani (activations) saqlash xotirani juda ko’p oladi. Checkpointing ba’zilarini saqlamaydi va backward paytida qayta hisoblaydi. 
+Xotira kamayadi, hisoblash taxminan 30% ko’payadi. Bu ham trade-off.
