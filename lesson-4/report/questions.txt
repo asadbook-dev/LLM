@@ -1,1 +1,50 @@
+1. LM va LLM ning farqi?
+=> LM - Language model. Next token prediction. 
+=> LLM - Large language model. Faqat Juda ko'p parameterlar va tokenlar bilan train qilingan model
 
+2. BPE tokenization nima?
+=> Eng ko'p yonma yon keladigan juftliklarni bitta tokenga birlashtirib beradi.
+
+3. Frontier modellar nima?
+=> Eng songgi kuchli modellar. Ulkan compute budget bilan boy kompaniyalar tomonidan oqitilgan modellar.
+
+4. FLOP nima?
+=>  FLoating point Operation - Kasr sonlar ustida bajariladigan bitta matematik amal. Neyron tarmoq hisoblash narxini olchashning standart birligi
+
+5. Emergence nima?
+=> Modelda malum bir hajm chegarasidan otgandan birdaniga paydo boladigan qobiliyat. kichik modellarda Emergence bolmaydi
+
+6. Word va token ning farqi?
+=> Word - so'z, biz oqiydigan qism
+=> token - modelning oqiydigan qismi. u so'z, sozning qismi, yoki bir belgi bolishi mumkin.
+
+7. LLM training qilishdan oldin nimalarni hisoblash kerak?
+=> Parameters > Memory > COmpute budget > Time > COst > Samaradorlik
+
+8. Trades-off qanday tushuncha?
+=> Biron narsaga erishish uchun biron narsadan voz kechish. Masalan Katta LLM qurmoqchi bolsak, Parameterlar va Tokenlar sonini oshirishimiz kerak buning natijasida Memory, Time, Cost oshadi. Katta LLM > Katta pul
+
+9. FP32 va BF16 ning farqi nimada?
+Bular sonlarni kompyuterda ifodalaydigan data formatlar.
+=> FP32 - 32bit - 4byte - xavfsizlik
+=> BF16 - 16bit - 2byte => son diapazoni FP32 bilan deyarli bir xil va 2 barobar kam joyni egallaydi - tezlik
+
+10. Parameters ni hisoblashdagi d -nima?
+d => hidden dimensions. Ya'ni bitta tokenni ifodalovchi vektor o'lchami.
+
+11. Embeddings nima? 
+=> Tokenni manosini ifodalydigan sonlar royxati vektor.
+
+12. Encoding va Embeddings ning farqlari?
+=> Encoding - SOnlarning ma'nosi yoq, Sparse vector, Qattiy qoidalarga asoslanga Konvertatsiya, Vektor hajmi lugat hajmi oshsa oshadi
+=> Embeddings - NN ning o'zi organadi, Sonlarda mano bor, Dense vektor, Vektor hajmi doimiy cheklangan boladi
+
+13. Attention'ning asosiy vazifasi nima?
+=> Tokenlar orasidagi bog‘lanishlarni hisoblab, kerakli kontekst ma’lumotlarini birlashtiradi.
+
+14. Attention modelga so‘zning kontekstini tushunishga qanday yordam beradi?
+=> Attention joriy token uchun boshqa tokenlardan qaysi ma’lumotlar muhimroq ekanini hisoblaydi va ulardan ma’lumot birlashtiradi.
+
+15. Local serverda ishlaydigan LLM va Claude kabi cloud-based LLM'lar o‘rtasidagi asosiy farqlar nimada?
+=> Local LLM o‘z kompyuterimiz yoki serverimizda ishlaydi, ma’lumotlar ustidan nazorat ko‘proq bo‘ladi. 
+Cloud-based LLM esa masofadagi serverda ishlaydi va internet orqali foydalaniladi. Masalan, Claude — cloud-based LLM.
