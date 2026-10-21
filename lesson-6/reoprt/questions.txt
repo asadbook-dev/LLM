@@ -1,1 +1,79 @@
+1. LLM da Layer nima?
+=>Layer — model ichida ma’lumotni qayta ishlaydigan bosqich.
+=> Har bir layer inputdagi ma’lumotni qayta ishlab, keyingi layerga uzatadi.
+=> Misol: 32 layer Transformer — 32 ta Transformer block ketma-ket ishlaydi.
 
+2. Vocabulary va tokeniation farqi nima?
+=> Vocabulary — model taniydigan tokenlar to‘plami va ularning ID'lari.
+=> Tokenization — matnni tokenlarga ajratish jarayoni.
+=> Misol: "I love AI" → ["I", "love", "AI"] → [12, 45, 87].
+
+3. Tokenization nima va uning qanday turlari bor?
+=> Tokenization — matnni model qayta ishlay oladigan kichik birliklarga ajratish.
+Asosiy usullar:
+- Word: so‘zlar bo‘yicha.
+- Character: belgilar bo‘yicha.
+- Byte - bytelar boyicha (256)
+- BPE - Byte per encoding - eng kop takrorlanganlarni bitta tokenga yozadi
+Misol: "unhappiness" → ["un", "happi", "ness"] kabi qismlarga ajralishi mumkin.
+
+4. Layer qanday sublayerlardan tashkil topgan?
+=> Standart Transformer block odatda quyidagilardan tashkil topadi:
+1. Attention — tokenlar orasidagi bog‘lanishlarni hisoblaydi.
+2. FFN — har bir tokenni qayta ishlaydi.
+3. Normalization — katta sonlarni kichraytirib bitta oraliqqa olib keladi.
+4. Activation — Linearity -> Nonlinearity
+
+5. Attention va FFN farqi?
+- Attention — tokenlar bir-biridan qanday ma’lumot olishini aniqlaydi.
+- FFN (Feed-Forward Network) — har bir tokenning olingan representation'ini alohida qayta ishlaydi.
+Misol: Attention gapdagi "u" so‘zining "Ali" bilan bog‘lanishini aniqlashga yordam beradi. FFN esa hosil bo‘lgan representation'ni o‘zgartiradi.
+
+6. Activation function nima uning qanday turlari bor?
+=> Activation Function — neyron chiqishiga qo‘llanadigan matematik funksiya. U neural network'ga chiziqli bo‘lmagan bog‘lanishlarni o‘rganish imkonini beradi.
+- ReLU, GELU, SWiGLU, GEGLU
+
+7. LLM model architecture ni tushuntirib bering?
+Input text => Tokenization => Embedding => Transformer Blocks × N => Attention → FFN => Normalization => Activation
+
+8. Encoding va embeddings farqi?
+Encoding — ma’lumotni boshqa ko‘rinishga o‘tkazish jarayoni, Manosiz raqam, Sparse vector
+Embedding — tokenni sonli vektor bilan ifodalash, Manoli raqam, Dense vector
+
+9. Trades off nima?
+=> Bir narsaga erishish uchun boshqasidan voz kechish
+
+10. Qanday holatlarda model toxtab qoladi (buzilib qoladi?)
+=> Out of Memory (OOM): GPU xotirasi yetmaydi.
+
+11. Attention va Attention layer orasidagi farq nima?
+- Attention — Q, K va V orqali bog‘lanishlarni hisoblaydigan mexanizm.
+- Attention Layer — shu mexanizmni amalga oshiradigan to‘liq layer.
+Misol: Attention — hisoblash usuli; Attention Layer — shu usulni ishlatadigan modul.
+
+12. Serial va Parallel orasidagi farq nima?
+- Serial (ketma-ket): keyingi operatsiya oldingisi tugagandan keyin bajariladi.
+- Parallel (parallel): bir nechta operatsiya bir vaqtda bajariladi.
+
+13. Nima uchun RMSNorm yaxshi?
+=> RMSNorm (Root Mean Square Normalization) — neural network'dagi qiymatlarni normallashtirish usuli. U LayerNorm'ga qaraganda hisoblash jihatidan soddaroq va ko‘pincha tezroq.
+- Hisoblash kamroq: o‘rtacha qiymatni hisoblash va ayirish shart emas.
+- Samarali: hisoblash xarajati kamayishi mumkin.
+
+
+14. Nima uchun ReLU eskirgan?
+=> manfiy input uchun gradient nol bo‘ladi, bu ayrim neyronlarning o‘rganmay qolishiga olib kelishi mumkin (dying ReLU).
+
+15. MHA vs MQA?
+- MHA (Multi-Head Attention): har bir Query head uchun alohida Key va Value head mavjud.
+- MQA (Multi-Query Attention): barcha Query headlar bitta umumiy Key va Value headdan foydalanadi.
+Misol: 32 ta Query head bo‘lsa, MHA'da 32 ta K/V head, MQA'da esa 1 ta K/V head bo‘ladi.
+Asosiy farq: MHA ko‘proq xotira ishlatadi; MQA KV Cache'ni kamaytiradi.
+
+16. MQA vs GQA?
+- MQA: barcha Query headlar bitta K/V headdan foydalanadi.
+- GQA (Grouped-Query Attention): Query headlar guruhlarga bo‘linadi va har bir guruh alohida K/V headdan foydalanadi.
+Misol: 32 ta Query head uchun:
+- MQA → 1 ta K/V head.
+- GQA → 8 ta K/V head (har biriga 4 ta Query head).
+Asosiy farq: MQA xotirani ko‘proq tejaydi; GQA esa xotira sarfi va model sifati o‘rtasida muvozanat yaratishga intiladi.
