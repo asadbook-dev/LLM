@@ -1,0 +1,109 @@
+1. LLM qanday ishlaydi?
+
+Savol => LLM matnni qabul qilgandan boshlab javob yaratguncha qanday bosqichlardan o‘tadi?
+
+Javob => Avval matn Tokenization orqali tokenlarga ajratiladi. Keyin token ID’lari Embedding yordamida vectorlarga aylantiriladi. 
+Attention tokenlar orasidagi bog‘liqliklarni o‘rganadi, FFN esa har bir token reprezentatsiyasini qayta ishlaydi. 
+Transformer bloklaridan o‘tgan ma’lumot asosida model keyingi tokenni bashorat qiladi.
+
+2. Tokenization va Vocabulary nima?
+
+Savol => Tokenization nima va Vocabulary qanday vazifani bajaradi?
+
+Javob => Tokenization — matnni tokenlarga ajratish jarayoni. Vocabulary esa model taniydigan tokenlar va ularning ID’larini saqlaydi. 
+Tokenlar to‘liq so‘z yoki so‘zning bir qismi bo‘lishi mumkin.
+
+3. Embedding va Attention nima?
+
+Savol => Embedding nima uchun kerak va Attention nima vazifani bajaradi?
+
+Javob => Embedding token ID’larini sonli vectorlarga aylantiradi. Attention esa tokenlar orasidagi bog‘liqliklarni hisobga olib, matn kontekstini tushunishga yordam beradi. 
+Embedding vectoridagi har bir sonning alohida aniq ma’nosi bo‘lishi shart emas.
+
+4. Transformer Block nima?
+
+Savol => Transformer Block ichidagi Attention va FFN qanday farq qiladi?
+
+Javob => Attention tokenlar orasidagi ma’lumot almashinuvini ta’minlaydi. FFN esa har bir tokenning vector reprezentatsiyasini alohida qayta ishlaydi. 
+Ikkalasi birgalikda modelga matn kontekstini o‘rganishga yordam beradi.
+
+5. MHA, MQA va GQA nima?
+
+Savol => Multi-Head Attention (MHA), Multi-Query Attention (MQA) va Grouped-Query Attention (GQA) o‘rtasidagi farq nima?
+
+Javob => MHA’da har bir Attention head o‘zining Key va Value headlariga ega. MQA’da barcha Query headlar bitta umumiy Key va Value headdan foydalanadi. 
+GQA’da esa Query headlar guruhlarga bo‘linadi va har bir guruh Key va Value headlarini bo‘lishadi. MQA va GQA KV Cache xotirasini kamaytirishga yordam beradi.
+
+6. RMSNorm nima?
+
+Savol => RMSNorm nima va Pre-Norm/Post-Norm bilan qanday farq qiladi?
+
+Javob => RMSNorm — vectorni Root Mean Square qiymati asosida normallashtirish usuli. U mean qiymatini ayirishni talab qilmaydi. 
+Pre-Norm va Post-Norm esa normalization Transformer blokining qaysi joyida bajarilishini bildiradi.
+
+7. FLOPs va 6ND formulasi nima?
+
+Savol => FLOPs nima va LLM training uchun hisoblash xarajati qanday taxmin qilinadi?
+
+Javob => FLOPs — bajarilgan floating-point operatsiyalar soni, FLOPS esa bir sekundda bajariladigan floating-point operatsiyalar soni. 
+Oddiy dense Transformer uchun training hisoblash xarajati taxminan quyidagi formula bilan baholanadi:
+
+C = 6ND
+
+Bu yerda N — parametrlar soni, D — training tokenlari soni, C esa hisoblash xarajatidir.
+
+8. Chinchilla Law nima?
+
+Savol => Chinchilla Law model parametrlari va training tokenlari o‘rtasidagi munosabatni qanday tushuntiradi?
+
+Javob => Chinchilla Law model hajmi va training ma’lumotlari miqdorini muvozanatlash muhimligini ko‘rsatadi. 
+Muayyan compute-optimal sharoitlarda taxminan (D approx 20N) munosabati ishlatiladi. Bu universal qoida emas, balki ma’lum sharoitlar uchun taxminiy nisbatdir.
+
+9. FP32, FP16 va BF16 nima?
+
+Savol => FP32, FP16 va BF16 formatlari o‘rtasidagi farq nima?
+
+Javob => Bular kompyuterda sonlarni ifodalash formatlari. FP32 32 bit yoki 4 bytes, FP16 va BF16 esa 16 bit yoki 2 bytes xotira egallaydi. 
+FP32 yuqoriroq aniqlikni ta’minlaydi. FP16’ning dinamik diapazoni torroq, BF16’ning dinamik diapazoni esa FP32’ga yaqin. FP16 va BF16 xotira sarfini kamaytirishga yordam beradi.
+
+10. Training va Inference nima?
+
+Savol => Training va Inference o‘rtasidagi asosiy farq nima?
+
+Javob => Training — model parametrlarini ma’lumotlar yordamida o‘rganish jarayoni. Bu jarayonda Loss hisoblanadi, Backpropagation orqali Gradient topiladi va Optimizer parametrlarni yangilaydi. 
+Inference esa o‘qitilgan modeldan foydalanib bashorat yoki javob olish jarayonidir.
+
+11. KV Cache nima?
+
+Savol => KV Cache nima uchun kerak?
+
+Javob => KV Cache avvalgi tokenlar uchun hisoblangan Key va Value tensorlarini saqlaydi. Bu yangi token yaratilganda oldingi tokenlar uchun ushbu qiymatlarni qayta hisoblash zaruratini kamaytiradi. 
+MQA va GQA KV Cache hajmini kamaytirishga yordam beradi.
+
+12. OOM nima va uni qanday kamaytirish mumkin?
+
+Savol => Out of Memory (OOM) nimani anglatadi va uni qanday kamaytirish mumkin?
+
+Javob => OOM — model yoki dastur ishlashi uchun yetarli xotira mavjud bo‘lmagan holat. Uni kamaytirish uchun Batch Size’ni kamaytirish, FP16 yoki BF16 Mixed Precision’dan foydalanish va training vaqtida 
+Gradient Checkpointing ishlatish mumkin. Mos arxitekturalarda GQA yoki MQA ham KV Cache xotirasini kamaytiradi.
+
+13. Loss va Gradient nima?
+
+Savol => Loss va Gradient nima, ular modelni o‘qitishda qanday ishlatiladi?
+
+Javob => Loss model bashoratining xatosini o‘lchaydi. Gradient Loss parametrlar o‘zgarganda qanday o‘zgarishini ko‘rsatadi. 
+Gradient Descent Loss’ni kamaytirish uchun parametrlarni Gradient’ga qarama-qarshi yo‘nalishda yangilaydi.
+
+14. Overfitting va Underfitting nima?
+
+Savol => Overfitting va Underfitting o‘rtasidagi farq nima?
+
+Javob => Overfitting — model training ma’lumotlarida yaxshi, ammo yangi ma’lumotlarda yomon ishlashi. Bunda model shovqin yoki tasodifiy xususiyatlarni ham yodlab olishi mumkin. 
+Underfitting esa model training ma’lumotlarida ham, yangi ma’lumotlarda ham yetarli natija ko‘rsata olmasligidir.
+
+15. Fine-tuning va RAG nima?
+
+Savol => Fine-tuning va Retrieval-Augmented Generation (RAG) o‘rtasidagi farq nima?
+
+Javob => Fine-tuning — oldindan o‘qitilgan modelni qo‘shimcha ma’lumotlarda o‘qitish orqali uning parametrlarini yangilash. 
+RAG esa savolga javob berish vaqtida tashqi hujjatlardan tegishli ma’lumotlarni qidirib, ularni LLM’ga uzatadi. RAG yordamida hujjatlarni modelni qayta o‘qitmasdan yangilash mumkin.
